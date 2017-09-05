@@ -6,9 +6,9 @@ import collection.JavaConverters._
 object Main {
 
 
-  def main(args: Array[String]): Unit = {
+  def main2(args: Array[String]): Unit = {
 
-    val device = new OnvifDevice("marisa.maciejnowicki.com:5056", "admin", "studniakamera1")
+    val device = new OnvifDevice("marisa.maciejnowicki.com:5056", "", "")
 
     val profiles = device.getDevices.getProfiles
     println(profiles.asScala.map(_.getToken))

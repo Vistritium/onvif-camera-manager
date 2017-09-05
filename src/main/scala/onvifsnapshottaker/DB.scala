@@ -15,7 +15,7 @@ class DB extends Actor with LazyLogging {
 
   private implicit val dispatcher: ExecutionContextExecutor = context.dispatcher
 
-  private val path = Paths.get(Config().getString("database"))
+  private val path = Paths.get(Config().getString("config"))
   private var listeners: List[ActorRef] = List()
 
   private var config: Root = _
@@ -23,8 +23,9 @@ class DB extends Actor with LazyLogging {
 
   override def receive: Receive = {
     case RegisterForConfig => {
+      logger.debug(s"${sender()} registered for config change")
       listeners = sender() :: listeners
-      sender() ! config
+      sender() ! ConfigChanged(config)
     }
     case SetConfig(root) => {
       Try {

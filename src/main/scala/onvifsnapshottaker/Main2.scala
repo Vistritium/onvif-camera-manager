@@ -1,22 +1,18 @@
 package onvifsnapshottaker
 
+import akka.actor.{ActorSystem, Props}
 import com.typesafe.scalalogging.LazyLogging
 
 object Main2 extends LazyLogging {
 
-
   def main(args: Array[String]): Unit = {
+    logger.info("App started")
 
-/*    val root = Root(
-      Presets(List(Preset("Garden", "Orgród"))),
-      Triggers(List(9, 13, 18, 22))
-    )
+    val system = ActorSystem()
 
-    val str = Config.objectMapper.writeValueAsString(root)
-    logger.info(str)*/
-
-    UriPhotoMaker.shot()
-
+    val db = system.actorOf(Props[DB], "db")
+    val mainWorker = system.actorOf(Props[MainWorker])
+    db.tell(RegisterForConfig, mainWorker)
   }
 
 

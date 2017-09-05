@@ -17,5 +17,15 @@ object Config {
 
   val httpClient: CloseableHttpClient = HttpClients.createDefault()
 
+  val photoMaker: PhotoMaker = {
+    val str = config.getString("photoSaver")
+    if (str.equalsIgnoreCase("ffmpeg")) {
+      FfmpegPhotoMaker
+    } else if (str.equalsIgnoreCase("uri")) {
+      UriPhotoMaker
+    } else throw new IllegalStateException(s"Unknown photo saver ${str}")
+
+  }
+
   def apply(): Config = config
 }

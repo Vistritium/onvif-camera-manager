@@ -19,3 +19,10 @@ libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
 libraryDependencies += "commons-io" % "commons-io" % "2.5"
 libraryDependencies += "org.apache.commons" % "commons-imaging" % "1.0-R1534292"
+
+enablePlugins(JavaAppPackaging)
+
+javaOptions in Universal ++= Seq (
+  "-J-Xmx64m",
+  "-J-Xms64m"
+)

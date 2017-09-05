@@ -1,5 +1,7 @@
 package onvifsnapshottaker
 
+import java.time.Instant
+
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import onvifsnapshottaker.db.{Preset, Presets}
@@ -17,10 +19,12 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
   private var jobs: List[Preset] = presets.presets
   private var finishedJobs: List[(Preset, Array[Byte])] = List()
 
-  private val photoMaker: PhotoMaker = FfmpegPhotoMaker
+  private val photoMaker: PhotoMaker = Config.photoMaker
 
   private var errorCounter = 0
   private val errorMax = 3
+
+  private val startTime = System.nanoTime()
 
   override def receive: PartialFunction[Any, Unit] = {
     case Tick => {
@@ -87,6 +91,12 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
     logger.info(s"Starting session for ${hour} with ${presets.presets.size} presets")
     self ! Tick
     super.preStart()
+  }
+
+
+  override def postStop(): Unit = {
+    super.postStop()
+    logger.info(s"PhotoSession ${hour} took ${Duration.fromNanos(System.nanoTime() - startTime).toSeconds} seconds")
   }
 
   private case object Tick

@@ -12,9 +12,10 @@ object FfmpegPhotoMaker extends PhotoMaker {
 
   override def shot(): Try[Array[Byte]] = {
     Try {
-      val process = Runtime.getRuntime.exec(script.toString)
+      val process = Runtime.getRuntime.exec(s"${script.toString} | tee ffmpeg.log")
       process.waitFor()
       val bytes = Files.readAllBytes(image)
+      process.destroy()
       bytes
     }
   }
