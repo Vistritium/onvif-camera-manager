@@ -28,6 +28,6 @@ libraryDependencies += "com.github.hipjim" %% "scala-retry" % "0.2.2"
 enablePlugins(JavaAppPackaging)
 
 javaOptions in Universal ++= Seq(
-  "-J-Xmx64m",
-  "-J-Xms64m"
+  "-J-Xmx128m",
+  "-J-Xms128m"
 )

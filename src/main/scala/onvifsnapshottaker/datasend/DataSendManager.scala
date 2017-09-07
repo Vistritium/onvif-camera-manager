@@ -102,14 +102,3 @@ class DataSendManager extends Actor with LazyLogging {
 
 
 case object DataSenderTick
-
-object TstMain {
-  def main(args: Array[String]): Unit = {
-
-    val numbers = Stream.iterate(0)(_ + 1)
-    val numbersAfterNumber: Int => Stream[Int] = n => Stream.iterate(n)(_ + 1)
-    numbers.flatMap(numbersAfterNumber).take(100).foreach(println(_))
-
-
-  }
-}

@@ -17,10 +17,6 @@ object AlarmAdder extends LazyLogging {
     difference
   }
 
-  def main(args: Array[String]): Unit = {
-    println(addAdjustHour)
-  }
-
   def addAlarm(hour: Int, handler: Int => Unit): Unit = {
     logger.info(s"Adding alarm for ${hour}")
     this.synchronized {
