@@ -1,4 +1,4 @@
-package onvifsnapshottaker
+package onvifsnapshottaker.alarm
 
 import java.time._
 import java.util.Date
@@ -25,6 +25,14 @@ object AlarmAdder extends LazyLogging {
     logger.info(s"Adding alarm for ${hour}")
     this.synchronized {
       manager.addAlarm(new AlarmEntry(hour.toString, 0, hour + addAdjustHour, -1, -1, -1, -1, _ => handler(hour)
+      ))
+    }
+  }
+
+  def addMinuteAlarm(minute: Int, handler: Int => Unit): Unit = {
+    logger.info(s"Adding alarm for ${minute} minute")
+    this.synchronized {
+      manager.addAlarm(new AlarmEntry(minute.toString, minute, -1, -1, -1, -1, -1, _ => handler(minute)
       ))
     }
   }

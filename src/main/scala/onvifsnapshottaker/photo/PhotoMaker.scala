@@ -1,4 +1,4 @@
-package onvifsnapshottaker
+package onvifsnapshottaker.photo
 
 import scala.util.Try
 

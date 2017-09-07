@@ -1,5 +1,6 @@
-package onvifsnapshottaker
+package onvifsnapshottaker.session
 
+import onvifsnapshottaker.Config
 import onvifsnapshottaker.db.Preset
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.util.EntityUtils

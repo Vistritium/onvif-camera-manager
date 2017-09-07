@@ -15,9 +15,7 @@ import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet
 
 object PhotoSaver extends LazyLogging {
 
-  private val database = Paths.get(Config().getString("photoDatabase"))
-  require(Files.isDirectory(database), s"${database} must be directory")
-  require(Files.isWritable(database), s"${database} must be writable")
+
 
   private val timezone = TimeZone.getTimeZone(Config().getString("savingFormatTimezone"))
   private val (lat, lon) = {
@@ -61,26 +59,20 @@ object PhotoSaver extends LazyLogging {
     val nowDate = Date.from(now.toInstant)
     val formatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss")
 
-    val year = getWithLeadingZeros(now.getYear)
-    val mounth = getWithLeadingZeros(now.getMonthValue)
-    val day = getWithLeadingZeros(now.getDayOfMonth)
-    val hour = getWithLeadingZeros(now.getHour)
-    val folder = database.resolve(s"${year}").resolve(s"${mounth}").resolve(s"${day}")
+    val folder = PhotoDatabase.getDirectoryForDay(now)
+
+    val year = PhotoDatabase.getWithLeadingZeros(now.getYear)
+    val month = PhotoDatabase.getWithLeadingZeros(now.getMonthValue)
+    val day = PhotoDatabase.getWithLeadingZeros(now.getDayOfMonth)
+    val hour = PhotoDatabase.getWithLeadingZeros(now.getHour)
+
     Files.createDirectories(folder)
     val currentExiffDate = formatter.format(nowDate)
-    val fileName = s"${entry._1.displayName} ${year}.${mounth}.${day} ${hour}.jpg"
+    val fileName = s"${entry._1.displayName} ${year}.${month}.${day} ${hour}.jpg"
     val saveLocation = folder.resolve(fileName)
     (currentExiffDate, saveLocation)
   }
 
-  private def getWithLeadingZeros(value: Int, limit: Int = 2) = {
-    val limitValue = limit - 1
-    val str = value.toString
-    val length = str.length
-    if (length < limit) {
-      val difference = limitValue - length
-      (0 to difference).map(_ => "0").reduce(_ + _) + str
-    } else str
-  }
+
 
 }

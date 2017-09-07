@@ -3,6 +3,7 @@ package onvifsnapshottaker
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.typesafe.config.{Config, ConfigFactory}
+import onvifsnapshottaker.photo.{FfmpegPhotoMaker, PhotoMaker, UriPhotoMaker}
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 
 object Config {
@@ -24,7 +25,6 @@ object Config {
     } else if (str.equalsIgnoreCase("uri")) {
       UriPhotoMaker
     } else throw new IllegalStateException(s"Unknown photo saver ${str}")
-
   }
 
   def apply(): Config = config

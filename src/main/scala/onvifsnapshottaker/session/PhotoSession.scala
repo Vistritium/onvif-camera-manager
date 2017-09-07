@@ -1,10 +1,10 @@
-package onvifsnapshottaker
-
-import java.time.Instant
+package onvifsnapshottaker.session
 
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
+import onvifsnapshottaker.Config
 import onvifsnapshottaker.db.{Preset, Presets}
+import onvifsnapshottaker.photo.PhotoMaker
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._

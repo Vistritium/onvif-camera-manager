@@ -1,7 +1,8 @@
-package onvifsnapshottaker
+package onvifsnapshottaker.photo
 
 import java.util.Objects
 
+import onvifsnapshottaker.Config
 import org.apache.commons.io.IOUtils
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
 

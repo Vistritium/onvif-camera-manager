@@ -1,6 +1,8 @@
-package onvifsnapshottaker
+package onvifsnapshottaker.photo
 
 import java.nio.file.{Files, Paths}
+
+import onvifsnapshottaker.Config
 
 import scala.util.Try
 

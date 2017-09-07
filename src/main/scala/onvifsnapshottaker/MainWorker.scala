@@ -1,19 +1,24 @@
 package onvifsnapshottaker
 
-import java.time.{Instant, ZonedDateTime}
+import java.time.ZonedDateTime
 
 import akka.actor.{Actor, ActorRef, Props, Terminated}
 import com.typesafe.scalalogging.LazyLogging
+import onvifsnapshottaker.alarm.AlarmAdder
+import onvifsnapshottaker.datasend.DataSenderTick
 import onvifsnapshottaker.db.Root
+import onvifsnapshottaker.session.{FinishedJob, FinishedJobs, PhotoSession}
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 class MainWorker extends Actor with LazyLogging {
 
   private var sessionMaker: Option[ActorRef] = None
   private var config: Root = _
 
-  private val testAlarm = Config().getBoolean("testAlarm")
+  private val datasender = context.actorSelection("/user/datasender")
+
+  private val testSession = Config().getBoolean("testSession")
 
   override def receive: Receive = {
 
@@ -24,7 +29,7 @@ class MainWorker extends Actor with LazyLogging {
       config.triggers.hoursOfDay.foreach(hour => {
         AlarmAdder.addAlarm(hour, (hour) => self ! Fire(hour))
       })
-      if (testAlarm) {
+      if (testSession) {
         AlarmAdder.addAndFire(ZonedDateTime.now().getHour, (hour) => self ! Fire(hour))
       }
 
@@ -42,6 +47,7 @@ class MainWorker extends Actor with LazyLogging {
 
     case FinishedJobs(jobs) => {
       logger.info("PhotoSession finished")
+      datasender ! DataSenderTick
       sessionMaker = None
     }
 
