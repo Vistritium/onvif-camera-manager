@@ -30,7 +30,9 @@ class DataSendManager extends Actor with LazyLogging {
       val now = LocalDateTime.now
       checkMonthDirectory(PhotoDatabase.getDirectoryForMonth(now))
       checkMonthDirectory(PhotoDatabase.getDirectoryForMonth(now.minusMonths(1)))
-      sendNotSentFiles(filesToSend)
+      if (filesToSend.nonEmpty) {
+        sendNotSentFiles(filesToSend)
+      }
       filesToSend = List()
     }
   }

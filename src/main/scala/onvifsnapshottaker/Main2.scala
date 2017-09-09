@@ -21,11 +21,11 @@ object Main2 extends LazyLogging {
 
     val dataSender = system.actorOf(BackoffSupervisor.props(Backoff.onFailure(
       Props[DataSendManager],
-      "datasender",
+      "datasenderworker",
       1 minute,
       5 minutes,
       0.2
-    )))
+    )), "datasender")
 
     dataSender ! DataSenderTick
 

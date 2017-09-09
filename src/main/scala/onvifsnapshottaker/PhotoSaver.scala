@@ -16,7 +16,6 @@ import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet
 object PhotoSaver extends LazyLogging {
 
 
-
   private val timezone = TimeZone.getTimeZone(Config().getString("savingFormatTimezone"))
   private val (lat, lon) = {
     val config = Config().getConfig("location")
@@ -48,6 +47,8 @@ object PhotoSaver extends LazyLogging {
     directory.removeField(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL)
     directory.add(ExifTagConstants.EXIF_TAG_DATE_TIME_DIGITIZED, currentExiffDate)
     directory.add(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL, currentExiffDate)
+
+    directory.add(ExifTagConstants.EXIF_TAG_USER_COMMENT, Config.objectMapper.writeValueAsString(entry._1))
     outputSet.setGPSInDegrees(lon, lat)
     val outputStream = Files.newOutputStream(saveLocation)
     new ExifRewriter().updateExifMetadataLossless(entry._2, outputStream, outputSet)
@@ -72,7 +73,6 @@ object PhotoSaver extends LazyLogging {
     val saveLocation = folder.resolve(fileName)
     (currentExiffDate, saveLocation)
   }
-
 
 
 }

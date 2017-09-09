@@ -23,7 +23,8 @@ libraryDependencies += "org.apache.commons" % "commons-imaging" % "1.0-R1534292"
 libraryDependencies += "org.scala-lang.modules" %% "scala-java8-compat" % "0.8.0"
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.6"
 libraryDependencies += "com.github.hipjim" %% "scala-retry" % "0.2.2"
-
+libraryDependencies += "com.coreoz" % "wisp" % "1.0.0"
+libraryDependencies += "com.cronutils" % "cron-utils" % "6.0.2"
 
 enablePlugins(JavaAppPackaging)
 
