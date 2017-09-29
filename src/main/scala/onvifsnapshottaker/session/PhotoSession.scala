@@ -1,6 +1,6 @@
 package onvifsnapshottaker.session
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef, Props}
 import com.typesafe.scalalogging.LazyLogging
 import onvifsnapshottaker.Config
 import onvifsnapshottaker.db.{Preset, Presets}
@@ -26,6 +26,8 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
 
   private val startTime = System.nanoTime()
 
+  private var healthRepaier: ActorRef = _
+
   override def receive: PartialFunction[Any, Unit] = {
     case Tick => {
       if (jobs.nonEmpty) {
@@ -39,6 +41,14 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
         } else {
           logger.warn("Finished but no jobs done")
         }
+        context.stop(self)
+      }
+    }
+    case Completed(success) => {
+      if (success) {
+        self ! Tick
+      } else {
+        logger.error("Stopping session because camera is not working")
         context.stop(self)
       }
     }
@@ -89,10 +99,10 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
 
   override def preStart(): Unit = {
     logger.info(s"Starting session for ${hour} with ${presets.presets.size} presets")
-    self ! Tick
+    healthRepaier = context.actorOf(Props[CameraHealthRepairer])
+    context.watch(healthRepaier)
     super.preStart()
   }
-
 
   override def postStop(): Unit = {
     super.postStop()
