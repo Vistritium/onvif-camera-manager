@@ -54,7 +54,7 @@ class CameraHealthRepairer extends Actor with LazyLogging {
       RebootDevice.reboot() match {
         case Failure(exception) =>
           logger.error("Failed to reboot", exception)
-          finish(false)
+          finish(success = false, wasBroken = false)
         case Success(_) => {
           scheduleCheck()
         }
@@ -65,8 +65,12 @@ class CameraHealthRepairer extends Actor with LazyLogging {
     }
   }
 
-  private def finish(success: Boolean): Unit = {
-    logger.info(s"Finishing reboot with ${if (success) "success" else "failure"}")
+  private def finish(success: Boolean, wasBroken: Boolean = true): Unit = {
+    if(wasBroken){
+      logger.info(s"Finishing repairing with ${if (success) "success" else "failure"}")
+    } else {
+      logger.info(s"No reboot required. Finishing..")
+    }
     context.parent ! Completed(success)
     if (Objects.nonNull(finalTimeout)) {
       finalTimeout.cancel()

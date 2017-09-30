@@ -100,7 +100,6 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
   override def preStart(): Unit = {
     logger.info(s"Starting session for ${hour} with ${presets.presets.size} presets")
     healthRepaier = context.actorOf(Props[CameraHealthRepairer])
-    context.watch(healthRepaier)
     super.preStart()
   }
 
