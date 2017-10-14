@@ -31,6 +31,7 @@ class DataSendManager extends Actor with LazyLogging {
       checkMonthDirectory(PhotoDatabase.getDirectoryForMonth(now))
       checkMonthDirectory(PhotoDatabase.getDirectoryForMonth(now.minusMonths(1)))
       if (filesToSend.nonEmpty) {
+        logger.info(s"Will try to send ${filesToSend.size} files")
         filesToSend.grouped(10).foldLeft(true)((wasSuccess, next) =>
           if (wasSuccess) sendNotSentFiles(next)
           else false
@@ -78,7 +79,7 @@ class DataSendManager extends Actor with LazyLogging {
   }
 
   def sendNotSentFiles(files: List[Path]): Boolean = {
-    Retry(DataSender.sendFiles(filesToSend) match {
+    Retry(DataSender.sendFiles(files) match {
       case Failure(exception) => throw exception
       case Success(value) => value
     })(RetryStrategy.fixedBackOff(retryDuration = 5.seconds, maxAttempts = 3)) match {
