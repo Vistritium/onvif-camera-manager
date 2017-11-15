@@ -31,24 +31,26 @@ object RebootDevice extends LazyLogging {
   }
 
   def reboot(): Try[String] = {
-    logger.info("Rebooting camera")
-    val post = new HttpPost(url)
-    logger.info(url)
-    post.addHeader(authorization)
-    val pair: NameValuePair = new BasicNameValuePair("cmd", "sysreboot")
-    val entity = new UrlEncodedFormEntity(Collections.singletonList(pair))
-    post.setEntity(entity)
+    Try {
+      logger.info("Rebooting camera")
+      val post = new HttpPost(url)
+      logger.info(url)
+      post.addHeader(authorization)
+      val pair: NameValuePair = new BasicNameValuePair("cmd", "sysreboot")
+      val entity = new UrlEncodedFormEntity(Collections.singletonList(pair))
+      post.setEntity(entity)
 
-    val response = Config.httpClient.execute(post)
-    val body = IOUtils.toString(response.getEntity.getContent, "utf-8")
-    EntityUtils.consume(response.getEntity)
-    if (!response.getStatusLine.getStatusCode.toString.startsWith("2")) {
-      logger.info(s"Reboot failure ${response.getStatusLine} ${body}")
-      Failure(new IllegalStateException("non 2xx response"))
-    } else {
-      logger.info(s"Reboot success ${body}")
-      Success(body)
-    }
+      val response = Config.httpClient.execute(post)
+      val body = IOUtils.toString(response.getEntity.getContent, "utf-8")
+      EntityUtils.consume(response.getEntity)
+      if (!response.getStatusLine.getStatusCode.toString.startsWith("2")) {
+        logger.info(s"Reboot failure ${response.getStatusLine} ${body}")
+        Failure(new IllegalStateException("non 2xx response"))
+      } else {
+        logger.info(s"Reboot success ${body}")
+        Success(body)
+      }
+    }.flatten
   }
 
 }
