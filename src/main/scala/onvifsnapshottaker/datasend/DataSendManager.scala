@@ -44,7 +44,7 @@ class DataSendManager extends Actor with LazyLogging {
 
   def checkMonthDirectory(path: Path): Unit = {
     if (Files.exists(path)) {
-      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala).opt.get
+      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala.toList).opt.get
         .filter(Files.isDirectory(_))
         .foreach(checkDayDirectory)
     } else {
@@ -56,7 +56,7 @@ class DataSendManager extends Actor with LazyLogging {
     logger.debug(s"Checking day directory ${path.toString}")
     val metadata = path.resolve(".metadata")
     val filesInDirectory =
-      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala).opt.get
+      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala.toList).opt.get
         .filter(Files.isRegularFile(_))
         .filterNot(_.getFileName.toString.startsWith("."))
         .map(_.toAbsolutePath).toSet
