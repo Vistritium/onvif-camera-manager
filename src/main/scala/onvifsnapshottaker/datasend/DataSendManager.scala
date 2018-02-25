@@ -61,7 +61,7 @@ class DataSendManager extends Actor with LazyLogging {
         .filterNot(_.getFileName.toString.startsWith("."))
         .map(_.toAbsolutePath).toSet
     if (Files.exists(metadata)) {
-      val lines = Files.lines(metadata).toScala[Set]
+      val lines = managed(Files.lines(metadata)).map(_.toScala[Set]).opt.get
       val alreadySentFiles = lines.filter(_.nonEmpty)
         .flatMap(line => Try(path.resolve(line)).toOption)
         .filter(Files.isRegularFile(_)).map(_.toAbsolutePath)
