@@ -1,20 +1,21 @@
 package onvifsnapshottaker.datasend
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths, StandardOpenOption}
-import java.time.{Instant, LocalDateTime}
+import java.nio.file.{Files, Path, StandardOpenOption}
+import java.time.LocalDateTime
 
 import akka.actor.{Actor, Cancellable}
 import com.typesafe.scalalogging.LazyLogging
 import onvifsnapshottaker.PhotoDatabase
+import resource._
 import util.retry.blocking
 import util.retry.blocking.{Retry, RetryStrategy}
 
 import scala.collection.JavaConverters._
 import scala.compat.java8.StreamConverters._
 import scala.concurrent.ExecutionContextExecutor
-import scala.util.{Failure, Success, Try}
 import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 
 class DataSendManager extends Actor with LazyLogging {
 
@@ -43,22 +44,22 @@ class DataSendManager extends Actor with LazyLogging {
 
   def checkMonthDirectory(path: Path): Unit = {
     if (Files.exists(path)) {
-      Files.newDirectoryStream(path).asScala
+      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala).opt.get
         .filter(Files.isDirectory(_))
         .foreach(checkDayDirectory)
     } else {
       logger.debug(s"checkMonthDirectory ${path} does not exist")
     }
-
   }
 
   def checkDayDirectory(path: Path): Unit = {
     logger.debug(s"Checking day directory ${path.toString}")
     val metadata = path.resolve(".metadata")
-    val filesInDirectory = Files.newDirectoryStream(path).iterator().asScala
-      .filter(Files.isRegularFile(_))
-      .filterNot(_.getFileName.toString.startsWith("."))
-      .map(_.toAbsolutePath).toSet
+    val filesInDirectory =
+      managed(Files.newDirectoryStream(path)).map(_.iterator().asScala).opt.get
+        .filter(Files.isRegularFile(_))
+        .filterNot(_.getFileName.toString.startsWith("."))
+        .map(_.toAbsolutePath).toSet
     if (Files.exists(metadata)) {
       val lines = Files.lines(metadata).toScala[Set]
       val alreadySentFiles = lines.filter(_.nonEmpty)

@@ -25,6 +25,7 @@ libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.6"
 libraryDependencies += "com.github.hipjim" %% "scala-retry" % "0.2.2"
 libraryDependencies += "com.coreoz" % "wisp" % "1.0.0"
 libraryDependencies += "com.cronutils" % "cron-utils" % "6.0.2"
+libraryDependencies += "com.jsuereth" %% "scala-arm" % "2.0"
 
 enablePlugins(JavaAppPackaging)
 
