@@ -9,13 +9,16 @@ resolvers += "Adobe" at "https://repo.adobe.com/nexus/content/repositories/publi
 unmanagedJars in Compile += file("libs/onvif-2016-03-16.jar")
 unmanagedJars in Compile += file("libs/jdring-2.0.jar")
 
+val akkaVersion = "2.5.4"
+
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "org.apache.httpcomponents" % "httpclient" % "4.5.3"
 libraryDependencies += "org.apache.httpcomponents" % "httpmime" % "4.5.3"
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.0"
 libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.0"
-libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.4"
+libraryDependencies += "com.typesafe.akka" %% "akka-actor" % akkaVersion
+libraryDependencies += "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
 libraryDependencies += "commons-io" % "commons-io" % "2.5"
@@ -26,6 +29,8 @@ libraryDependencies += "com.github.hipjim" %% "scala-retry" % "0.2.2"
 libraryDependencies += "com.coreoz" % "wisp" % "1.0.0"
 libraryDependencies += "com.cronutils" % "cron-utils" % "6.0.2"
 libraryDependencies += "com.jsuereth" %% "scala-arm" % "2.0"
+libraryDependencies += "org.slf4j" % "jcl-over-slf4j" % "1.7.25"
+
 
 enablePlugins(JavaAppPackaging)
 

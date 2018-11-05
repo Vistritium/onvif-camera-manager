@@ -5,7 +5,6 @@ import collection.JavaConverters._
 
 object Main {
 
-
   def main2(args: Array[String]): Unit = {
 
     val device = new OnvifDevice("marisa.maciejnowicki.com:5056", "", "")

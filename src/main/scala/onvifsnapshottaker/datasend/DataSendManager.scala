@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 import akka.actor.{Actor, Cancellable}
 import com.typesafe.scalalogging.LazyLogging
-import onvifsnapshottaker.PhotoDatabase
+import onvifsnapshottaker.{Config, PhotoDatabase}
 import resource._
 import util.retry.blocking
 import util.retry.blocking.{Retry, RetryStrategy}
@@ -19,6 +19,9 @@ import scala.util.{Failure, Success, Try}
 
 class DataSendManager extends Actor with LazyLogging {
 
+  private val enabled = Config().getBoolean("sendFiles.enabled")
+  logger.info(s"DataSendManager is ${if (enabled) "enabled" else "disabled"}")
+
   private implicit val dispatcher: ExecutionContextExecutor = context.dispatcher
 
   private var filesToSend: List[Path] = List()
@@ -26,6 +29,7 @@ class DataSendManager extends Actor with LazyLogging {
   private var ticker: Option[Cancellable] = None
 
   override def receive: PartialFunction[Any, Unit] = {
+    case DataSenderTick if !enabled => logger.info("Tick [disabled]")
     case DataSenderTick => {
       logger.info("Tick")
       val now = LocalDateTime.now

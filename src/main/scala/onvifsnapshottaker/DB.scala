@@ -39,6 +39,9 @@ class DB extends Actor with LazyLogging {
           listeners.foreach(_ ! ConfigChanged(config))
       }
     }
+    case Tick if true => {
+      logger.trace("Config reload disabled")
+    }
     case Tick => {
       val bytes = Files.readAllBytes(path)
       val digest = DigestUtils.sha1(bytes)

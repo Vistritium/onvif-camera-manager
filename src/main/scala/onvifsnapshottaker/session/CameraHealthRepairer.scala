@@ -71,6 +71,7 @@ class CameraHealthRepairer extends Actor with LazyLogging {
     } else {
       logger.info(s"No reboot required. Finishing..")
     }
+
     context.parent ! Completed(success)
     if (Objects.nonNull(finalTimeout)) {
       finalTimeout.cancel()

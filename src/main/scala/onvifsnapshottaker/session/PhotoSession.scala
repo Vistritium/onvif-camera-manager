@@ -77,6 +77,7 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
       logger.info(s"Taking photo of ${preset}")
       photoMaker.shot() match {
         case Failure(exception) => {
+          logger.debug("TakePhoto failure")
           errorCounter = errorCounter + 1
           if (errorCounter > errorMax) {
             logger.error(s"Failed to take photo ${preset} after ${errorMax} tries. ${exception.getMessage}")
@@ -87,6 +88,7 @@ class PhotoSession(presets: Presets, hour: Int) extends Actor with LazyLogging {
           }
         }
         case Success(photo) => {
+          logger.debug("TakePhoto success")
           errorCounter = 0
           finishedJobs = (preset -> photo) :: finishedJobs
           context.parent ! FinishedJob(preset, photo)
