@@ -11,7 +11,7 @@ unmanagedJars in Compile += file("libs/jdring-2.0.jar")
 
 val akkaVersion = "2.5.4"
 
-libraryDependencies += "com.typesafe" % "config" % "1.3.1"
+libraryDependencies += "com.typesafe" % "config" % "1.4.0"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "org.apache.httpcomponents" % "httpclient" % "4.5.3"
 libraryDependencies += "org.apache.httpcomponents" % "httpmime" % "4.5.3"
@@ -41,7 +41,9 @@ dockerBaseImage := "adoptopenjdk/openjdk11:debianslim-jre"
 
 javaOptions in Universal ++= Seq(
   "-J-Xmx128m",
-  "-J-Xms128m"
+  "-J-Xms128m",
+  "-Dconfig.override_with_env_vars=true",
+  "-Dconfig.file=/data/onvif-camera-snapshot-taker/config.config"
 )
 
 import com.typesafe.sbt.packager.docker._
