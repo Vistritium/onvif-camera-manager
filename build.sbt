@@ -54,6 +54,5 @@ dockerCommands ++= Seq(
   Cmd("RUN add-apt-repository ppa:mc3man/trusty-media "),
   Cmd("RUN apt-get update || true"),
   Cmd("RUN apt-get install -y ffmpeg"),
-  Cmd("RUN apt-get install -y frei0r-plugins"),
-  Cmd("USER", "daemon")
+  Cmd("RUN apt-get install -y frei0r-plugins")
 )
