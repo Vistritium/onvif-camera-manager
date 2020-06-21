@@ -31,8 +31,12 @@ libraryDependencies += "com.cronutils" % "cron-utils" % "6.0.2"
 libraryDependencies += "com.jsuereth" %% "scala-arm" % "2.0"
 libraryDependencies += "org.slf4j" % "jcl-over-slf4j" % "1.7.25"
 
-
 enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+dockerRepository := Some("nowicki.azurecr.io")
+dockerUsername := Some("nowicki")
+dockerExposedVolumes := Seq("/data")
+dockerUpdateLatest := true
 
 javaOptions in Universal ++= Seq(
   "-J-Xmx128m",
