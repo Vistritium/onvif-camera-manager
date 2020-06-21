@@ -1,0 +1,22 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+container: 
+    image: nowicki.azurecr.io/scala-build:latest
+    endpoint: nowicki
+
+
+steps:
+- script: sbt docker:publishLocal
+  displayName: 'Compile scala and build docker'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'nowicki'
+    repository: 'nowicki/onvif-camera-snapshot-taker'
+    command: 'push'
+    tags: 'latest'
+- script: curl -i https://marisa.maciejnowicki.com:16443 || true
+  displayName: 'testing connectivity'
+
