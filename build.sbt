@@ -37,8 +37,21 @@ dockerRepository := Some("nowicki.azurecr.io")
 dockerUsername := Some("nowicki")
 dockerExposedVolumes := Seq("/data")
 dockerUpdateLatest := true
+dockerBaseImage := "adoptopenjdk/openjdk11:debianslim-jre"
 
 javaOptions in Universal ++= Seq(
   "-J-Xmx128m",
   "-J-Xms128m"
+)
+
+import com.typesafe.sbt.packager.docker._
+dockerCommands ++= Seq(
+  Cmd("USER", "root"),
+  Cmd("RUN apt-get update"),
+  Cmd("RUN apt-get install -y software-properties-common"),
+  Cmd("RUN add-apt-repository ppa:mc3man/trusty-media "),
+  Cmd("RUN apt-get update || true"),
+  Cmd("RUN apt-get install -y ffmpeg"),
+  Cmd("RUN apt-get install -y frei0r-plugins"),
+  Cmd("USER", "daemon")
 )
