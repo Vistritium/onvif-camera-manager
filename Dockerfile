@@ -11,7 +11,6 @@ RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:mc3man/trusty-media
 RUN apt-get update || true
 RUN apt-get install -y ffmpeg
-RUN apt-get install -y frei0r-plugins
 
 VOLUME ["/data"]
 ENTRYPOINT ["bin/onvif-camera-snapshot-taker"]
