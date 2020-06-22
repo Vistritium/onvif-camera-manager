@@ -11,7 +11,7 @@ container:
 steps:
 - script: sbt docker:stage
   displayName: 'Compile scala and build docker'
-- script: docker buildx build --platform linux/arm64 -t nowicki/onvif-camera-snapshot-taker:latest
+- script: docker buildx build --platform linux/arm64 -t nowicki/onvif-camera-snapshot-taker:latest .
   displayName: 'Build docker on arm'
 - task: Docker@2
   inputs:
