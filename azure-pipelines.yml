@@ -17,10 +17,12 @@ steps:
   displayName: 'Buildx configuration'
 - script: docker buildx build --platform linux/arm64 -t nowicki/onvif-camera-snapshot-taker:latest .
   displayName: 'Build docker on arm'
+- script: docker image ls
+  displayName: 'List docker images'
 - task: Docker@2
   inputs:
     containerRegistry: 'nowicki'
-    repository: 'nowicki/onvif-camera-snapshot-taker'
+    repository: 'nowicki/onvif-camera-snapshot-taker:latest'
     command: 'push'
     tags: 'latest'
 - script: curl -i https://marisa.maciejnowicki.com:16443 || true
