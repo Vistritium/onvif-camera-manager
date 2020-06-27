@@ -19,7 +19,7 @@ steps:
   displayName: 'Buildx env quemu-user-static'
 - script: docker buildx create --name testbuilder && docker buildx ls && docker buildx use testbuilder && docker buildx ls && docker buildx inspect --bootstrap
   displayName: 'Buildx configuration'
-- script: docker buildx build --platform linux/arm64 --push -t nowicki/onvif-camera-snapshot-taker:latest .
+- script: docker buildx build --platform linux/arm64 --push -t nowicki.azurecr.io/nowicki/onvif-camera-snapshot-taker:latest .
   displayName: 'Build docker on arm'
 - script: curl -i https://marisa.maciejnowicki.com:16443 || true
   displayName: 'testing connectivity'
