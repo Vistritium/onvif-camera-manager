@@ -24,6 +24,7 @@ object RebootDevice extends LazyLogging {
   private val authorization = {
     val user = Config().getString("user.name")
     val pass = Config().getString("user.password")
+    logger.info(s"Using basic auth ${user}:${pass}")
     val auth = user + ":" + pass
     val encodedAuth = Base64.encodeBase64(auth.getBytes("utf-8"))
     val authHeader = "Basic " + new String(encodedAuth)
