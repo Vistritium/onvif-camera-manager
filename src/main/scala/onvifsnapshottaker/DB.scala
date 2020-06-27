@@ -15,7 +15,7 @@ class DB extends Actor with LazyLogging {
 
   private implicit val dispatcher: ExecutionContextExecutor = context.dispatcher
 
-  private val path = Paths.get(Config().getString("config"))
+  private val path = Paths.get(Config().getString("configDb"))
   private var listeners: List[ActorRef] = List()
 
   private var config: Root = _
