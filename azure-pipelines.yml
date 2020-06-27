@@ -9,22 +9,18 @@ container:
 
 
 steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'nowicki'
+    command: 'login'
 - script: sbt stage
   displayName: 'Compile scala and build docker'
 - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   displayName: 'Buildx env quemu-user-static'
 - script: docker buildx create --name testbuilder && docker buildx ls && docker buildx use testbuilder && docker buildx ls && docker buildx inspect --bootstrap
   displayName: 'Buildx configuration'
-- script: docker buildx build --platform linux/arm64 -t nowicki/onvif-camera-snapshot-taker:latest .
+- script: docker buildx build --platform linux/arm64 --push -t nowicki/onvif-camera-snapshot-taker:latest .
   displayName: 'Build docker on arm'
-- script: docker image ls
-  displayName: 'List docker images'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'nowicki'
-    repository: 'nowicki/onvif-camera-snapshot-taker:latest'
-    command: 'push'
-    tags: 'latest'
 - script: curl -i https://marisa.maciejnowicki.com:16443 || true
   displayName: 'testing connectivity'
 
