@@ -49,7 +49,7 @@ class CameraHealthRepairer extends Actor with LazyLogging {
     val triedPhoto = Config.photoMaker.shot()
     if (triedPhoto.isFailure) {
       logger.debug("Photo failure", triedPhoto.failed.get)
-      logger.info(s"Photo failure ${triedPhoto.failed.get.getMessage}. Will try restarting camera..")
+      logger.info(s"Photo failure. Will try restarting camera..", triedPhoto.failed.get)
       finalTimeout = context.system.scheduler.scheduleOnce(finalTimeoutDuration, self, FinalTimeout)
       RebootDevice.reboot() match {
         case Failure(exception) =>
